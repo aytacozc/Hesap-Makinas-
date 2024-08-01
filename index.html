@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Hesap Makinesi Projesi</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <form>
+            <h1 style="color: white; font-weight: bold; text-align: center; font-family: 'Roboto';">CALCULATOR</h1>
+            <input type="text" id="textbox" readonly>
+            <table>
+                <tr>
+                    <td><button type="button" class="operator" onclick="appendToDisplay('^')">x<sup>y</sup></button></td>
+                    <td><button type="button" class="operator" onclick="appendToDisplay('%')">%</button></td>
+                    <td><button type="button" class="operator" onclick="appendToDisplay('Math.sqrt(')">√</button></td>
+                    <td><button type="button" class="number" onclick="clearsoloDisplay()">←</button></td>
+                </tr>
+                <tr>
+                    <td><button type="button" class="number" onclick="appendToDisplay('7')">7</button></td>
+                    <td><button type="button" class="number" onclick="appendToDisplay('8')">8</button></td>
+                    <td><button type="button" class="number" onclick="appendToDisplay('9')">9</button></td>
+                    <td><button type="button" class="operator" onclick="appendToDisplay('+')">+</button></td>
+                </tr>
+                <tr>
+                    <td><button type="button" class="number" onclick="appendToDisplay('6')">6</button></td>
+                    <td><button type="button" class="number" onclick="appendToDisplay('5')">5</button></td>
+                    <td><button type="button" class="number" onclick="appendToDisplay('4')">4</button></td>
+                    <td><button type="button" class="operator" onclick="appendToDisplay('-')">-</button></td>
+                </tr>
+                <tr>
+                    <td><button type="button" class="number" onclick="appendToDisplay('3')">3</button></td>
+                    <td><button type="button" class="number" onclick="appendToDisplay('2')">2</button></td>
+                    <td><button type="button" class="number" onclick="appendToDisplay('1')">1</button></td>
+                    <td><button type="button" class="operator" onclick="appendToDisplay('/')">/</button></td>
+                </tr>
+                <tr>
+                    <td><button type="button" class="number" onclick="appendToDisplay('00')">00</button></td>
+                    <td><button type="button" class="number" onclick="appendToDisplay('0')">0</button></td>
+                    <td><button type="button" id="clear" onclick="clearDisplay()">C</button></td>
+                    <td><button type="button" class="operator" onclick="appendToDisplay('*')">*</button></td>
+                </tr>
+            </table>
+            <button type="button" id="equals" class="hesapla" onclick="calculateResult()">=</button>
+        </form>
+    </div>
+    <script>
+        function appendToDisplay(value) {
+            let text = document.getElementById('textbox').value;
+            const lastChar = text.slice(-1);
+
+            // Prevent multiple operators in a row
+            if (['+', '-', '/', '*', '%'].includes(value) && ['+', '-', '/', '*', '%'].includes(lastChar)) {
+                return;
+            }
+
+            // Special handling for sqrt
+            if (value === 'Math.sqrt(' && (lastChar === '' || ['+', '-', '/', '*', '%'].includes(lastChar))) {
+                document.getElementById('textbox').value += value;
+                return;
+            }
+
+            document.getElementById('textbox').value += value;
+        }
+
+        function clearDisplay() {
+            document.getElementById('textbox').value = '';
+        }
+
+        function clearsoloDisplay() {
+            const currentValue = document.getElementById('textbox').value;
+            document.getElementById('textbox').value = currentValue.slice(0, -1);
+        }
+
+        function calculateResult() {
+            try {
+                let expression = document.getElementById('textbox').value;
+
+                // Replace ^ with ** for exponentiation
+                expression = expression.replace(/\^/g, '**');
+                // Replace sqrt with Math.sqrt
+                expression = expression.replace(/sqrt\(/g, 'Math.sqrt(');
+
+                console.log('Evaluating:', expression); // Debugging line
+
+                // Evaluate the expression safely
+                const result = new Function('"use strict"; return (' + expression + ')')();
+
+                console.log('Result:', result); // Debugging line
+
+                // Display the result
+                document.getElementById('textbox').value = result;
+            } catch (e) {
+                console.error('Error evaluating expression:', e);
+                document.getElementById('textbox').value = 'Geçersiz İfade!';
+            }
+        }
+    </script>
+</body>
+</html>
