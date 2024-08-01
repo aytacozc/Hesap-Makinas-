@@ -54,12 +54,12 @@
             let text = document.getElementById('textbox').value;
             const lastChar = text.slice(-1);
 
-            // Prevent multiple operators in a row
+            
             if (['+', '-', '/', '*', '%'].includes(value) && ['+', '-', '/', '*', '%'].includes(lastChar)) {
                 return;
             }
 
-            // Special handling for sqrt
+            
             if (value === 'Math.sqrt(' && (lastChar === '' || ['+', '-', '/', '*', '%'].includes(lastChar))) {
                 document.getElementById('textbox').value += value;
                 return;
@@ -81,19 +81,19 @@
             try {
                 let expression = document.getElementById('textbox').value;
 
-                // Replace ^ with ** for exponentiation
+                
                 expression = expression.replace(/\^/g, '**');
-                // Replace sqrt with Math.sqrt
+                
                 expression = expression.replace(/sqrt\(/g, 'Math.sqrt(');
 
-                console.log('Evaluating:', expression); // Debugging line
+                console.log('Evaluating:', expression); 
 
-                // Evaluate the expression safely
+               
                 const result = new Function('"use strict"; return (' + expression + ')')();
 
-                console.log('Result:', result); // Debugging line
+                console.log('Result:', result); 
 
-                // Display the result
+              
                 document.getElementById('textbox').value = result;
             } catch (e) {
                 console.error('Error evaluating expression:', e);
